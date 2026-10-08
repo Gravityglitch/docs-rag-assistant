@@ -8,6 +8,7 @@ still point at a navigable location.
 
 from __future__ import annotations
 
+import hashlib
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -97,6 +98,15 @@ def load_document(path: Path) -> list[Page]:
     if suffix in {".md", ".txt"}:
         return load_markdown(path)
     raise ValueError(f"Unsupported file type: {path}")
+
+
+def content_hash(path: Path) -> str:
+    """SHA-256 of the file bytes; the key for skipping unchanged documents on re-index."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def iter_documents(docs_dir: Path) -> Iterator[Path]:

@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-from rag.answer import ABSTAIN_PHRASE, ExtractiveLLM, answer_question, parse_citations
+from rag.answer import (
+    ABSTAIN_PHRASE,
+    SYSTEM_PROMPT,
+    ExtractiveLLM,
+    answer_question,
+    build_user_prompt,
+    estimate_cost_usd,
+    parse_citations,
+)
 from rag.ingest import Chunk
 from rag.retrieval import Hit
-
-
-class FakeLLM:
-    def __init__(self, reply: str) -> None:
-        self.reply = reply
-        self.calls = 0
-
-    def complete(self, system: str, user: str) -> str:
-        self.calls += 1
-        return self.reply
+from tests.conftest import FakeLLM
 
 
 def _hits() -> list[Hit]:
@@ -53,7 +52,22 @@ def test_parse_citations_ignores_unknown_sources() -> None:
 
 
 def test_extractive_llm_cites_best_sentence() -> None:
-    from rag.answer import SYSTEM_PROMPT, build_user_prompt
-
     reply = ExtractiveLLM().complete(SYSTEM_PROMPT, build_user_prompt("PTO days per year", _hits()))
     assert "18 days" in reply and reply.endswith("[handbook.md p.2].")
+
+
+def test_extractive_llm_streams_same_text() -> None:
+    prompt = build_user_prompt("PTO days per year", _hits())
+    llm = ExtractiveLLM()
+    assert "".join(llm.stream(SYSTEM_PROMPT, prompt)) == llm.complete(SYSTEM_PROMPT, prompt)
+
+
+def test_to_dict_includes_diagnostics_only_in_debug() -> None:
+    result = answer_question("How much PTO?", _hits(), FakeLLM("x [handbook.md p.2]."), 0.0, 0.9)
+    assert "diagnostics" not in result.to_dict()
+    assert "diagnostics" in result.to_dict(debug=True)
+
+
+def test_cost_estimate() -> None:
+    assert estimate_cost_usd("claude-sonnet-5-5", 1_000_000, 100_000) == 3.0
+    assert estimate_cost_usd("unknown-model", 1, 1) is None

@@ -7,14 +7,14 @@ The returned `confidence` is a separate, interpretable signal used for abstentio
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 
 import numpy as np
 from rank_bm25 import BM25Okapi
 
 from rag.embeddings import EmbeddingProvider, tokenize
 from rag.ingest import Chunk
-from rag.store import VectorStore
+from rag.store import ChunkStore
 
 _STOPWORDS = frozenset(
     "a an the is are was were be been of to in on for and or if do does did how what "
@@ -30,10 +30,41 @@ class Hit:
     score: float
     vector_score: float
     bm25_score: float
+    rerank_score: float | None = None
+
+    def diagnostic(self) -> dict[str, object]:
+        return {
+            "chunk_id": self.chunk.chunk_id,
+            "doc": self.chunk.doc,
+            "page": self.chunk.page,
+            "fused": round(self.score, 5),
+            "vector": round(self.vector_score, 4),
+            "bm25": round(self.bm25_score, 4),
+            "rerank": None if self.rerank_score is None else round(self.rerank_score, 4),
+        }
+
+
+@dataclass
+class RetrievalDiagnostics:
+    """What happened during retrieval; returned from ``/ask?debug=true``."""
+
+    chunks_indexed: int = 0
+    candidates: int = 0
+    reranked: bool = False
+    reranker: str | None = None
+    threshold: float = 0.0
+    confidence: float = 0.0
+    retrieval_ms: float = 0.0
+    rerank_ms: float = 0.0
+    llm_ms: float = 0.0
+    hits: list[dict[str, object]] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)
 
 
 class HybridRetriever:
-    def __init__(self, store: VectorStore, embedder: EmbeddingProvider) -> None:
+    def __init__(self, store: ChunkStore, embedder: EmbeddingProvider) -> None:
         self.store = store
         self.embedder = embedder
         self.chunks, self.matrix = store.load_matrix()
