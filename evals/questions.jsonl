@@ -1,0 +1,17 @@
+{"id": "pto-days", "question": "How many days of paid time off do full-time employees get per year?", "expected_doc": "employee_handbook.md", "expected_page": 2, "answer_keywords": ["18"]}
+{"id": "pto-rollover-paraphrase", "question": "Can I carry unused vacation into next year, and how much?", "expected_doc": "employee_handbook.md", "expected_page": 2, "answer_keywords": ["5"]}
+{"id": "home-office-stipend", "question": "What is the home office stipend for new hires?", "expected_doc": "employee_handbook.md", "expected_page": 4, "answer_keywords": ["600"]}
+{"id": "expense-deadline", "question": "What's the deadline for filing an expense claim?", "expected_doc": "employee_handbook.md", "expected_page": 4, "answer_keywords": ["30 days"]}
+{"id": "parental-leave-primary", "question": "How long is parental leave for primary caregivers?", "expected_doc": "employee_handbook.md", "expected_page": 5, "answer_keywords": ["16 weeks"]}
+{"id": "promotion-cycle", "question": "When are promotion decisions made?", "expected_doc": "employee_handbook.md", "expected_page": 6, "answer_keywords": ["September"]}
+{"id": "team-plan-price", "question": "How much does the Team plan cost?", "expected_doc": "product_faq.docx", "expected_page": 2, "answer_keywords": ["12"]}
+{"id": "rate-limit-team", "question": "What is the API rate limit on the Team plan?", "expected_doc": "product_faq.docx", "expected_page": 3, "answer_keywords": ["600"]}
+{"id": "webhook-retries-paraphrase", "question": "If a webhook delivery fails, how many times will you retry it?", "expected_doc": "product_faq.docx", "expected_page": 3, "answer_keywords": ["5"]}
+{"id": "sso-plans", "question": "Which plans support SAML single sign-on?", "expected_doc": "product_faq.docx", "expected_page": 4, "answer_keywords": ["Team", "Enterprise"]}
+{"id": "enterprise-support-sla", "question": "What is the support response target for Enterprise critical incidents?", "expected_doc": "product_faq.docx", "expected_page": 5, "answer_keywords": ["1 hour"]}
+{"id": "refund-window", "question": "How long do I have to ask for a refund after my first payment?", "expected_doc": "refund_policy.pdf", "expected_page": 1, "answer_keywords": ["30 days"]}
+{"id": "refund-annual-cancel", "question": "What happens if I cancel an annual plan after the 30-day window?", "expected_doc": "refund_policy.pdf", "expected_page": 2, "answer_keywords": ["credit"]}
+{"id": "refund-processing-time", "question": "How many business days does a refund take to process?", "expected_doc": "refund_policy.pdf", "expected_page": 3, "answer_keywords": ["10 business days"]}
+{"id": "unanswerable-capital", "question": "What is the capital city of Australia?", "answerable": false}
+{"id": "unanswerable-ceo", "question": "Who is the CEO of Larkspur Labs?", "answerable": false}
+{"id": "unanswerable-mobile-app", "question": "Does Larkspur Hub have an iOS mobile app?", "answerable": false}
